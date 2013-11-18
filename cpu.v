@@ -10,7 +10,7 @@ module CPU(clk);
 	// Wires
 	wire [5:0] opcode, func;
 	wire [4:0] rs, rt, rd, sa;
-	wire [15:0] immediate;
+	wire [31:0] immediate;
 	wire [25:0] target;
 
 	// R-type instructions (ADD, SUB, SLT, JR)
@@ -56,8 +56,20 @@ module CPU(clk);
 	parameter MEM 	= 3;
 	parameter WB 	= 4;
 
+
+	integer i;
 	initial begin 
-		state = 0; 
+		PC = 0;
+		state = 0;
+		for ( i=0; i<32; i = i+1 ) begin
+      		Regfile[i] = 0000_0000_0000_0000_0000_0000_0000_0000;
+   		end
+   		Memory[1018] = 'h0000AF01;
+   		Memory[1019] = 'h00000B51;
+   		Memory[1020] = 'h008D0001;
+   		Memory[1021] = 'h09060401;
+   		Memory[1022] = 'h00000001;
+   		Memory[1023] = 'h00000002;
 		$readmemb("..\\..\\MARS\\instructions.dat", Memory);
 	end
 
@@ -66,13 +78,13 @@ module CPU(clk);
 	case (state)
 		IF: begin
 			IR <= Memory[PC];
-			PC <= PC + 4;
+			PC <= PC + 1;
 			state = ID;
 		end
 		
 		ID: begin
-			A <= rs;
-			B <= rt;
+			A <= Regfile[rs];
+			B <= Regfile[rt];
 			if(opcode == OP_BNE) begin
 				ALUResult <= immediate;
 				state = EX;
@@ -140,6 +152,7 @@ module CPU(clk);
 				state = WB;
 			end
 			else if(opcode == OP_SW) begin
+				Memory[ALUResult] = B;
 				state = IF;
 			end
 			else begin
@@ -157,6 +170,9 @@ module CPU(clk);
 	endcase
 	end
 
+	initial
+	$monitor($time, , opcode, , state, , PC, , ALUResult);
+
 endmodule
 
 
@@ -164,36 +180,14 @@ module CPU_TESTBENCH();
   // Inputs
   reg clk;
 
-  initial  // Stimulus
-  begin
-  clk = 0;
-  #10 clk = 1;
-  #10 clk = 0;
-  #10 clk = 1;
-  #10 clk = 0;  
-  #10 clk = 1;
-  #10 clk = 0;  
-  #10 clk = 1;
-  #10 clk = 0;  
-  #10 clk = 1;
-  #10 clk = 0;
+  initial begin
+    clk = 0;
+    forever begin
+      #5 clk = ~clk;
+    end
   end
 
-  // Run the test
   CPU MY_CPU( clk );
-  initial  // Response
-  begin
-  $dumpfile("test.txt");
-  $dumpvars(1,a,y);
-  #200;
-  $dumpoff;
-  #200;
-  $dumpon;
-  #20;
-  $dumpall;
-  #10;
-  $dumpflush;
-  end
-
+  
 
 endmodule
