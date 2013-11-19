@@ -2,7 +2,7 @@
 lw $t1, 1022
 lw $t2, 1023
 sw $t1, 1017
-#xori $t3, $t1, 2147483646
+xori $t3, $t1, 99
 add $t4, $t1, $t2
 sub $t5, $t2, $t1
 slt $t6, $t1, $t2
@@ -11,7 +11,7 @@ bne $t1, $t2, jumpelseif
 	add $t5, $t1, $t2
 	j jumpend
 jumpelseif:
-	sub $t5, $t1, $t2
+	sub $t5, $t2, $t1
 jumpend:
 	add $t5, $t5, $t5
 

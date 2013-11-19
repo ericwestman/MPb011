@@ -35,6 +35,7 @@ module CPU(clk);
 	assign target = IR[25:0];
 
 	// opcodes
+	parameter OP_LI   = 6'b001001;
 	parameter OP_LW   = 6'b100011;
 	parameter OP_SW   = 6'b101011;
 	parameter OP_J    = 6'b000010;
@@ -70,7 +71,7 @@ module CPU(clk);
    		Memory[1021] = 'h09060401;
    		Memory[1022] = 'h00000001;
    		Memory[1023] = 'h00000002;
-		$readmemb("..\\..\\MARS\\instructions.dat", Memory);
+		$readmemb("..\\..\\MARS\\allinstructions.dat", Memory);
 	end
 
 	always @(posedge clk) begin
@@ -86,7 +87,7 @@ module CPU(clk);
 			A <= Regfile[rs];
 			B <= Regfile[rt];
 			if(opcode == OP_BNE) begin
-				ALUResult <= immediate;
+				ALUResult <= PC + immediate;
 				state = EX;
 			end
 			else if (opcode == OP_J) begin
@@ -100,6 +101,10 @@ module CPU(clk);
 			end
 			else if (opcode == OP_R_TYPE || opcode == OP_XORI || opcode == OP_LW || opcode == OP_SW) begin
 				state = EX;
+			end
+			else if (opcode == OP_LI) begin
+				Regfile[rt] <= immediate;
+				state = IF;
 			end
 			else begin
 				state = IF;
