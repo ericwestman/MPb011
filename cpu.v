@@ -91,7 +91,8 @@ module CPU(clk);
 				state = EX;
 			end
 			else if (opcode == OP_J) begin
-				PC <= {PC[31:28],IR[25:0],2'b00};
+				// PC <= {PC[31:28],IR[25:0],2'b00};
+				PC <= {PC[31:28],IR[25],IR[25],IR[25:0]};
 				state = IF;
 			end
 			else if (opcode == OP_JAL) begin
@@ -117,7 +118,8 @@ module CPU(clk);
 				state = MEM;
 			end
 			else if (opcode == OP_JAL) begin
-				PC <= {PC[31:28],IR[25:0],2'b00};
+				// PC <= {PC[31:28],IR[25:0],2'b00};
+				PC <= {PC[31:28],IR[25],IR[25],IR[25:0]};
 				state = IF;
 			end
 			else if (opcode == OP_BNE) begin
