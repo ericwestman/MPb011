@@ -21,6 +21,9 @@ sub $t5, $t2, $t1
 # ($t1 < $t2) = (2 < 1 )= 1, stored into $t6
 slt $t6, $t1, $t2
 
+# if $t1 != $t5 (1 != 1) go to the jumpelseif 
+# because (1 != 1) is false, we'll do the $t1 + $t2 = 1 + 2 = 3, stored in $t7
+# then we'll jump to the end
 bne $t1, $t5, jumpelseif
 	add $t7, $t1, $t2
 	j jumpend
@@ -28,24 +31,28 @@ jumpelseif:
 	sub $t8, $t2, $t1
 jumpend:
 
-li $s0, 8
-li $s1, 4
-li $sp, 1020
-jal recurse
-
+# A test of the difference function
+# difference(8, 4) = 4
+li $s0, 8	# first input
+li $s1, 4	# second input
+li $sp, 1020	# set the stack pointer to a specific location in memory
+jal difference
 li $v0, 10
 syscall
 
-# assume a > b
-
-# function recurse (a, b)
-# if a == b
-#	return 0
-# else
-#	return 1 + recurse(a - 1 , b)
-
-recurse:
+# FUNCTION: difference(a, b)
+# Returns (a - b)
+# Assumption: a > b
+# 
+# Executes recursively (below is the psudocode)
+#   function difference (a, b)
+#   if a == b
+#       return 0
+#   else
+#       return 1 + difference(a - 1 , b)
+difference:
 bne $s0, $s1, end
+	# return 0
 	add $v1, $zero, $zero
 	jr $ra
 end:
@@ -55,11 +62,11 @@ end:
 	sw $s1, 1($sp)
 	sw $s0 0($sp)
 	
-	# Argument prep
+	# Argument prep (a - 1)
 	sub $s0, $s0, $t1
 	
 	# jal
-	jal recurse
+	jal difference
 	
 	# popping from the stack
 	lw $ra, 2($sp)
@@ -67,6 +74,6 @@ end:
 	lw $s0, 0($sp)
 	add $sp, $sp, $t4
 	
-	# return 1 + recurse($t1 , $t2)
+	# return 1 + difference($t1 , $t2)
 	add $v1, $v1, $t1
 	jr $ra
