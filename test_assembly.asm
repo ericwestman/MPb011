@@ -21,7 +21,7 @@ sub $t5, $t2, $t1
 # ($t1 < $t2) = (2 < 1 )= 1, stored into $t6
 slt $t6, $t1, $t2
 
-bne $t1, $t2, jumpelseif
+bne $t1, $t5, jumpelseif
 	add $t7, $t1, $t2
 	j jumpend
 jumpelseif:
@@ -30,7 +30,7 @@ jumpend:
 
 li $s0, 8
 li $s1, 4
-lw $sp, 1020
+li $sp, 1020
 jal recurse
 
 li $v0, 10

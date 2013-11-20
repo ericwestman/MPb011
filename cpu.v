@@ -49,6 +49,7 @@ module CPU(clk);
 	parameter FUNC_ADD  = 6'b100000;
 	parameter FUNC_SUB  = 6'b100010;
 	parameter FUNC_SLT  = 6'b101010;
+	parameter FUNC_SYSCALL = 6'b001100;
 
 	// state definitions
 	parameter IF 	= 0;
@@ -66,7 +67,7 @@ module CPU(clk);
       		Regfile[i] = 0000_0000_0000_0000_0000_0000_0000_0000;
    		end
    		Memory[1021] = 'h00000001;
-   		Memory[1022] = 'h00000010;
+   		Memory[1022] = 'h00000002;
 		$readmemb("..\\..\\MARS\\allinstructions.dat", Memory);
 	end
 
@@ -97,8 +98,8 @@ module CPU(clk);
 				state = EX;
 			end
 			else if (opcode == OP_R_TYPE || opcode == OP_XORI || opcode == OP_LW || opcode == OP_SW) begin
-				if (func == 001100) state = -1;
-				state = EX;
+				if (func == FUNC_SYSCALL) state = -1;
+				else state = EX;
 			end
 			else if (opcode == OP_LI) begin
 				Regfile[rt] <= immediate;
@@ -175,7 +176,7 @@ module CPU(clk);
 	end
 
 	initial
-	$monitor($time, , opcode, , state, , PC, , ALUResult);
+	$monitor($time, , opcode, , func, , state, , PC, , ALUResult, , Regfile[29], , Regfile[31]);
 
 endmodule
 
