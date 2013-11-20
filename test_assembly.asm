@@ -35,7 +35,7 @@ jumpend:
 # difference(8, 4) = 4
 li $s0, 8	# first input
 li $s1, 4	# second input
-lw $sp, 1020	# set the stack pointer to a specific location in memory
+li $sp, 1020	# set the stack pointer to a specific location in memory
 jal difference
 
 li $v0, 10
