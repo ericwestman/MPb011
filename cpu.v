@@ -97,6 +97,7 @@ module CPU(clk);
 				state = EX;
 			end
 			else if (opcode == OP_R_TYPE || opcode == OP_XORI || opcode == OP_LW || opcode == OP_SW) begin
+				if (func == 001100) state = -1;
 				state = EX;
 			end
 			else if (opcode == OP_LI) begin

@@ -16,6 +16,7 @@ jumpend:
 
 li $s0, 8
 li $s1, 4
+lw $sp, 1020
 jal recurse
 
 li $v0, 10
@@ -29,7 +30,6 @@ syscall
 # else
 #	return 1 + recurse(a - 1 , b)
 
-lw $sp, 1020
 recurse:
 bne $s0, $s1, end
 	add $v1, $zero, $zero
@@ -56,4 +56,3 @@ end:
 	# return 1 + recurse($t1 , $t2)
 	add $v1, $v1, $t1
 	jr $ra
-
