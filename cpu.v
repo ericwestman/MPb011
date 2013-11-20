@@ -65,12 +65,8 @@ module CPU(clk);
 		for ( i=0; i<32; i = i+1 ) begin
       		Regfile[i] = 0000_0000_0000_0000_0000_0000_0000_0000;
    		end
-   		Memory[1018] = 'h0000AF01;
-   		Memory[1019] = 'h00000B51;
-   		Memory[1020] = 'h008D0001;
-   		Memory[1021] = 'h09060401;
-   		Memory[1022] = 'h00000001;
-   		Memory[1023] = 'h00000002;
+   		Memory[1021] = 'h00000001;
+   		Memory[1022] = 'h00000010;
 		$readmemb("..\\..\\MARS\\allinstructions.dat", Memory);
 	end
 
