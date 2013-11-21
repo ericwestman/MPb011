@@ -176,7 +176,7 @@ module CPU(clk);
 	end
 
 	initial
-	$monitor($time, , opcode, , func, , state, , PC, , ALUResult, , Regfile[29], , Regfile[31]);
+	$monitor( "time:", $time, , " $v1:", Regfile[3], " $t1:", Regfile[9], " $t2:", Regfile[10], " $t3:", Regfile[11],  " $t4:", Regfile[12], " $t5:", Regfile[13], " $t6:", Regfile[14], " $t7:", Regfile[15], " $s0:", Regfile[16], " $s1:", Regfile[17], " $sp:", Regfile[29], " $ra:", Regfile[31] );
 
 endmodule
 
@@ -192,7 +192,8 @@ module CPU_TESTBENCH();
     end
   end
 
-  CPU MY_CPU( clk );
-  
 
+  CPU MY_CPU( clk );
+
+  
 endmodule
