@@ -68,7 +68,7 @@ module CPU(clk);
    		end
    		Memory[1021] = 'h00000001;
    		Memory[1022] = 'h00000002;
-		$readmemb("..\\..\\MARS\\allinstructions.dat", Memory);
+		$readmemb("instructions.dat", Memory);
 	end
 
 	always @(posedge clk) begin
